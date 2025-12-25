@@ -15,6 +15,7 @@ from config import (
     TOP_K_RESULTS
 )
 from services.chroma_client import get_chroma_client
+from utils.text_splitter import TextSplitter
 
 
 class VectorStoreService:
@@ -62,48 +63,6 @@ class VectorStoreService:
             raise ImportError(
                 "未找到 Chroma VectorStore 实现。请确认已安装 `langchain-community` 且版本包含 Chroma。"
             ) from e
-
-    def _split_text(self, text: str, chunk_size: int, chunk_overlap: int) -> List[str]:
-        """
-        将文本分割为固定大小的块（不依赖 LangChain 的 TextSplitter，避免额外依赖）。
-
-        策略：尽量在句子/段落边界处分割，并保留一定重叠。
-        """
-        if not text:
-            return []
-
-        separators = ["\n\n", "\n", "。", ".", "！", "!", "？", "?", "；", ";", " "]
-        chunks: List[str] = []
-        start = 0
-        text_length = len(text)
-
-        while start < text_length:
-            end = start + chunk_size
-            if end >= text_length:
-                last = text[start:].strip()
-                if last:
-                    chunks.append(last)
-                break
-
-            search_start = max(start + chunk_size - 100, start)
-            best_split = end
-
-            # 向后/向前在边界附近寻找分割点
-            for sep in separators:
-                pos = text.rfind(sep, search_start, min(end + 50, text_length))
-                if pos != -1 and pos > search_start:
-                    best_split = pos + len(sep)
-                    break
-
-            chunk = text[start:best_split].strip()
-            if chunk:
-                chunks.append(chunk)
-
-            start = best_split - chunk_overlap
-            if start < 0:
-                start = 0
-
-        return chunks
     
     def create_collection(self, collection_id: str) -> None:
         """
@@ -181,7 +140,8 @@ class VectorStoreService:
         if self.vector_store is None:
             raise ValueError("请先创建集合")
 
-        chunks = self._split_text(text, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+        # 使用统一的文本分块工具
+        chunks = TextSplitter.split_text(text, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
         
         # 为每个分块添加元数据
         metadatas = []

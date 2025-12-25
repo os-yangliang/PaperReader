@@ -16,7 +16,7 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from agents.coordinator import PaperReaderCoordinator
-from services.history_store import HistoryStoreService
+from services.service_manager import get_llm_service, get_vector_store, get_history_store
 from config import SUPPORTED_EXTENSIONS, MAX_FILE_SIZE_MB, CORS_ALLOW_ORIGINS
 
 app = FastAPI(
@@ -46,17 +46,26 @@ class AppState:
         self.current_history_id: Optional[str] = None
         self.current_document_id: Optional[str] = None
         
-        # 初始化历史记录存储服务
+        # 使用服务管理器获取历史记录服务
         try:
-            self.history_store = HistoryStoreService()
+            self.history_store = get_history_store()
         except Exception as e:
             print(f"[WARNING] 历史记录服务初始化失败: {e}")
             self.history_store = None
 
     def ensure_coordinator(self):
+        """确保协调器已初始化（使用依赖注入）"""
         if self.coordinator is None:
             try:
-                self.coordinator = PaperReaderCoordinator()
+                # 使用服务管理器获取共享服务实例
+                llm_service = get_llm_service()
+                vector_store = get_vector_store()
+                
+                # 创建协调器，传入共享服务
+                self.coordinator = PaperReaderCoordinator(
+                    llm_service=llm_service,
+                    vector_store=vector_store
+                )
                 self.init_error = ""
             except ValueError as e:
                 self.init_error = str(e)

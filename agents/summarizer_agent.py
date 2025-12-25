@@ -23,8 +23,14 @@ class SummaryResult:
 class SummarizerAgent:
     """摘要分析 Agent - 生成论文详细分析报告"""
     
-    def __init__(self, llm_service: Optional[LLMService] = None):
-        self.llm_service = llm_service or LLMService()
+    def __init__(self, llm_service: LLMService):
+        """
+        初始化摘要 Agent
+        
+        Args:
+            llm_service: LLM 服务（必需）
+        """
+        self.llm_service = llm_service
     
     def generate_summary(
         self,

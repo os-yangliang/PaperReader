@@ -32,11 +32,18 @@ class QAAgent:
     
     def __init__(
         self,
-        llm_service: Optional[LLMService] = None,
-        vector_store: Optional[VectorStoreService] = None
+        llm_service: LLMService,
+        vector_store: VectorStoreService
     ):
-        self.llm_service = llm_service or LLMService()
-        self.vector_store = vector_store or VectorStoreService()
+        """
+        初始化问答 Agent
+        
+        Args:
+            llm_service: LLM 服务（必需）
+            vector_store: 向量存储服务（必需）
+        """
+        self.llm_service = llm_service
+        self.vector_store = vector_store
         
         # 聊天历史
         self.chat_history: List[Dict[str, str]] = []

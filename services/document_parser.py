@@ -8,6 +8,7 @@ import fitz  # PyMuPDF
 from docx import Document
 
 from config import SUPPORTED_EXTENSIONS, MAX_FILE_SIZE_MB, CHUNK_SIZE, CHUNK_OVERLAP
+from utils.text_splitter import TextSplitter
 
 
 @dataclass
@@ -155,7 +156,7 @@ class DocumentParser:
     
     def _create_chunks(self, text: str) -> List[str]:
         """
-        将文本分割成固定大小的块
+        将文本分割成固定大小的块（使用统一的分块工具）
         
         Args:
             text: 原始文本
@@ -163,43 +164,7 @@ class DocumentParser:
         Returns:
             List[str]: 文本块列表
         """
-        if not text:
-            return []
-        
-        chunks = []
-        start = 0
-        text_length = len(text)
-        
-        while start < text_length:
-            # 计算结束位置
-            end = start + self.chunk_size
-            
-            if end >= text_length:
-                # 最后一块
-                chunks.append(text[start:].strip())
-                break
-            
-            # 尝试在句子边界处分割
-            # 向后查找句号、问号、感叹号等
-            search_start = max(start + self.chunk_size - 100, start)
-            best_split = end
-            
-            for sep in ["。", ".", "！", "!", "？", "?", "\n\n", "\n"]:
-                pos = text.rfind(sep, search_start, end + 50)
-                if pos != -1 and pos > search_start:
-                    best_split = pos + len(sep)
-                    break
-            
-            chunk = text[start:best_split].strip()
-            if chunk:
-                chunks.append(chunk)
-            
-            # 计算下一块的起始位置（带重叠）
-            start = best_split - self.chunk_overlap
-            if start < 0:
-                start = 0
-        
-        return chunks
+        return TextSplitter.split_text(text, self.chunk_size, self.chunk_overlap)
     
     def parse_from_bytes(self, file_bytes: bytes, filename: str) -> ParsedDocument:
         """

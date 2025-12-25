@@ -28,13 +28,21 @@ class ParserAgent:
     
     def __init__(
         self,
-        document_parser: Optional[DocumentParser] = None,
-        vector_store: Optional[VectorStoreService] = None,
-        llm_service: Optional[LLMService] = None
+        vector_store: VectorStoreService,
+        llm_service: LLMService,
+        document_parser: Optional[DocumentParser] = None
     ):
+        """
+        初始化解析 Agent
+        
+        Args:
+            vector_store: 向量存储服务（必需）
+            llm_service: LLM 服务（必需）
+            document_parser: 文档解析器（可选，默认创建新实例）
+        """
         self.document_parser = document_parser or DocumentParser()
-        self.vector_store = vector_store or VectorStoreService()
-        self.llm_service = llm_service or LLMService()
+        self.vector_store = vector_store
+        self.llm_service = llm_service
     
     def _generate_document_id(self, filename: str, content: str) -> str:
         """生成文档唯一ID"""

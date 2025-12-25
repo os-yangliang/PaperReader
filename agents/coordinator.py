@@ -69,26 +69,27 @@ class PaperReaderCoordinator:
     1. 文档上传 -> 解析 Agent 处理
     2. 解析完成 -> 摘要 Agent 生成分析报告
     3. 用户提问 -> 问答 Agent 回答
+    
+    使用依赖注入，强制传入共享服务实例
     """
     
     def __init__(
         self,
-        llm_service: Optional[LLMService] = None,
-        vector_store: Optional[VectorStoreService] = None
+        llm_service: LLMService,
+        vector_store: VectorStoreService
     ):
-        # 初始化共享服务
-        try:
-            self.llm_service = llm_service or LLMService()
-        except ValueError as e:
-            # API Key 未配置等错误
-            raise ValueError(f"LLM 服务初始化失败: {str(e)}")
+        """
+        初始化协调器
         
-        try:
-            self.vector_store = vector_store or VectorStoreService()
-        except Exception as e:
-            raise ValueError(f"向量存储服务初始化失败: {str(e)}")
+        Args:
+            llm_service: LLM 服务实例（必需）
+            vector_store: 向量存储服务实例（必需）
+        """
+        # 使用传入的共享服务
+        self.llm_service = llm_service
+        self.vector_store = vector_store
         
-        # 初始化各个 Agent
+        # 初始化各个 Agent，传入共享服务
         self.parser_agent = ParserAgent(
             vector_store=self.vector_store,
             llm_service=self.llm_service
