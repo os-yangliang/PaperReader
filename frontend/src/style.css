@@ -1,0 +1,401 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 全局样式 */
+:root {
+  --color-primary: #0ea5e9;
+  --color-accent: #d946ef;
+  --gradient-primary: linear-gradient(135deg, #0ea5e9, #6366f1, #d946ef);
+  --gradient-dark: linear-gradient(135deg, #0f172a, #1e293b);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Noto Sans SC', 'Inter', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+  min-height: 100vh;
+  color: #e2e8f0;
+  overflow-x: hidden;
+}
+
+/* 背景装饰 */
+.bg-mesh {
+  position: fixed;
+  inset: 0;
+  background-image: 
+    radial-gradient(at 27% 37%, hsla(215, 98%, 61%, 0.15) 0px, transparent 50%),
+    radial-gradient(at 97% 21%, hsla(271, 91%, 65%, 0.1) 0px, transparent 50%),
+    radial-gradient(at 52% 99%, hsla(215, 98%, 61%, 0.1) 0px, transparent 50%),
+    radial-gradient(at 10% 29%, hsla(271, 91%, 65%, 0.08) 0px, transparent 50%),
+    radial-gradient(at 97% 96%, hsla(215, 98%, 61%, 0.08) 0px, transparent 50%),
+    radial-gradient(at 33% 50%, hsla(271, 91%, 65%, 0.05) 0px, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 网格背景 */
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-size: 60px 60px;
+  background-image: 
+    linear-gradient(to right, rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 玻璃态卡片 */
+@layer components {
+  .glass-card {
+    @apply bg-dark-900/40 backdrop-blur-xl border border-white/5 rounded-2xl;
+    box-shadow: 
+      0 4px 30px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+  
+  .glass-card-light {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-xl;
+  }
+  
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-primary);
+  }
+  
+  .gradient-border {
+    position: relative;
+    background: linear-gradient(var(--gradient-dark));
+    border-radius: 1rem;
+  }
+  
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: var(--gradient-primary);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+  
+  .btn-primary {
+    @apply relative px-6 py-3 font-medium text-white rounded-xl overflow-hidden transition-all duration-300;
+    background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px rgba(14, 165, 233, 0.4);
+  }
+  
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+  
+  .btn-secondary {
+    @apply px-6 py-3 font-medium rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300;
+  }
+  
+  .input-glass {
+    @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 outline-none transition-all duration-300;
+  }
+  
+  .input-glass:focus {
+    @apply border-primary-500/50 ring-2 ring-primary-500/20;
+  }
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #38bdf8, #818cf8);
+}
+
+/* 文件拖拽区域 */
+.dropzone {
+  @apply relative border-2 border-dashed border-white/20 rounded-2xl p-12 text-center transition-all duration-300 cursor-pointer;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.05), rgba(217, 70, 239, 0.05));
+}
+
+.dropzone:hover {
+  @apply border-primary-500/50;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(217, 70, 239, 0.1));
+}
+
+.dropzone.drag-over {
+  @apply border-primary-500 bg-primary-500/10;
+  box-shadow: 0 0 30px rgba(14, 165, 233, 0.3);
+}
+
+/* 加载动画 */
+.loading-dots {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.loading-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+.loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+/* 聊天气泡 */
+.chat-bubble {
+  @apply relative px-5 py-3 rounded-2xl max-w-[85%];
+}
+
+.chat-bubble.user {
+  @apply bg-gradient-to-r from-primary-600 to-primary-500 text-white ml-auto;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-bubble.assistant {
+  @apply bg-dark-800/80 border border-white/10 text-gray-200;
+  border-bottom-left-radius: 4px;
+}
+
+/* Markdown 样式 */
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4 {
+  @apply font-semibold text-white mt-6 mb-3;
+}
+
+.markdown-content h1 { @apply text-2xl; }
+.markdown-content h2 { @apply text-xl; }
+.markdown-content h3 { @apply text-lg; }
+
+.markdown-content p {
+  @apply mb-4 leading-relaxed;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  @apply mb-4 pl-6;
+}
+
+.markdown-content li {
+  @apply mb-2;
+}
+
+.markdown-content ul li {
+  list-style-type: disc;
+}
+
+.markdown-content ol li {
+  list-style-type: decimal;
+}
+
+.markdown-content code {
+  @apply px-1.5 py-0.5 bg-dark-700 rounded text-primary-300 font-mono text-sm;
+}
+
+.markdown-content pre {
+  @apply my-4 p-4 bg-dark-800 rounded-xl overflow-x-auto;
+}
+
+.markdown-content pre code {
+  @apply bg-transparent p-0;
+}
+
+.markdown-content blockquote {
+  @apply border-l-4 border-primary-500 pl-4 my-4 italic text-gray-400;
+}
+
+.markdown-content table {
+  @apply w-full my-4 border-collapse;
+}
+
+.markdown-content th,
+.markdown-content td {
+  @apply border border-white/10 px-4 py-2 text-left;
+}
+
+.markdown-content th {
+  @apply bg-dark-800 font-semibold;
+}
+
+.markdown-content a {
+  @apply text-primary-400 hover:text-primary-300 underline;
+}
+
+.markdown-content strong {
+  @apply font-semibold text-white;
+}
+
+/* 进度条 */
+.progress-bar {
+  @apply h-2 bg-dark-700 rounded-full overflow-hidden;
+}
+
+.progress-bar-fill {
+  @apply h-full rounded-full transition-all duration-500;
+  background: var(--gradient-primary);
+}
+
+/* 闪烁光标 */
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background: var(--color-primary);
+  margin-left: 2px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* 浮动粒子 */
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  opacity: 0.3;
+  animation: float 8s ease-in-out infinite;
+}
+
+/* 文档卡片悬浮效果 */
+.doc-card {
+  @apply relative overflow-hidden transition-all duration-500;
+}
+
+.doc-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(14, 165, 233, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.doc-card:hover::before {
+  opacity: 1;
+}
+
+.doc-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* 页面切换动画 */
+.page-enter-active {
+  animation: slideUp 0.5s ease-out;
+}
+
+.page-leave-active {
+  animation: slideUp 0.3s ease-in reverse;
+}
+
+/* Tab 指示器 */
+.tab-indicator {
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  background: var(--gradient-primary);
+  border-radius: 1px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 工具提示 */
+.tooltip {
+  @apply invisible opacity-0 absolute z-50 px-3 py-1.5 text-sm bg-dark-800 border border-white/10 rounded-lg whitespace-nowrap transition-all duration-200;
+  transform: translateY(4px);
+}
+
+.tooltip-trigger:hover .tooltip {
+  @apply visible opacity-100;
+  transform: translateY(0);
+}
+
+/* 自定义细滚动条 */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.3);
+  border-radius: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.5);
+}
+
+/* 淡入动画 */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 慢速脉冲动画 */
+.animate-pulse-slow {
+  animation: pulseSlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseSlow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
