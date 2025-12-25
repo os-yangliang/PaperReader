@@ -1,6 +1,8 @@
 # 📚 论文阅读多智能体系统
 
 基于 LangChain + LangGraph 构建的智能论文分析与问答系统，配备现代化 Vue 3 前端界面。
+<img width="2160" height="1346" alt="image" src="https://github.com/user-attachments/assets/56d1287e-3ab2-4d3a-a9b1-30b424e34620" />
+
 
 ## ✨ 功能特点
 
@@ -9,6 +11,9 @@
 - 💬 **智能问答**: 基于 RAG 的论文对话问答系统
 - 🤖 **多智能体架构**: 使用 LangGraph 协调多个专业 Agent
 - 🎨 **现代化界面**: Vue 3 + Vite 构建的精美前端
+<img width="2560" height="1600" alt="f5326565a972c8ebd02f51a02cadcd34" src="https://github.com/user-attachments/assets/45be9237-03ee-4156-8dc7-917ae0867c66" />
+<img width="2560" height="1600" alt="ee7b18e94a14abdd25ae9aa269e83670" src="https://github.com/user-attachments/assets/2e97e10a-994f-4aa1-8841-0e146111012f" />
+<img width="2560" height="1600" alt="9d53b0009322ce751a0da168d7d42c9f" src="https://github.com/user-attachments/assets/abcc735d-5ebb-41e3-9fa7-8c1002a3b616" />
 
 ## 🏗️ 系统架构
 
@@ -225,6 +230,7 @@ paper_reader/
 - ✅ 实现依赖注入模式，统一服务实例管理
 - ✅ 历史记录从 ChromaDB 迁移到 SQLite，提升性能
 - ✅ 优化架构，减少不必要的服务实例创建
+
 
 ## 📝 License
 
